@@ -71,3 +71,22 @@ export async function getPools(
     return fallback;
   }
 }
+
+export async function searchCoins(query: string): Promise<SearchCoin[]> {
+  if (!query || query.trim().length === 0) {
+    return [];
+  }
+
+  try {
+    const data = await fetcher<{ coins: SearchCoin[] }>(
+      '/search',
+      { query: query.trim() },
+      0, // No cache for search results
+    );
+
+    return data.coins ?? [];
+  } catch (error) {
+    console.error('Search error:', error);
+    return [];
+  }
+}
